@@ -19,14 +19,16 @@ const Header = () => {
             <LinkContainer to={'/'}>
               <Navbar.Brand >ET3 Drive</Navbar.Brand>
             </LinkContainer>
-            <SearchBox></SearchBox>
+            {userInfo && userInfo.isAdmin && (
+              <SearchBox></SearchBox>
+            )}
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
             <LinkContainer to={'/buses'}>
                 <Nav.Link ><i className="fas fa-bus"></i>Buses</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to={'/reservations'}>
+                <LinkContainer to={'/tickets'}>
                 <Nav.Link ><i className="fas fa-ticket"></i>Tickets</Nav.Link>
                 </LinkContainer>
                 {userInfo ? (

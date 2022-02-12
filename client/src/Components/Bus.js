@@ -8,14 +8,7 @@ const Bus = ({bus}) => {
     const userLogin = useSelector(state => state.userLogin);
     const {userInfo} = userLogin;
     var history = useNavigate()
-    const bookHandler = (id) =>{
-     if(!userInfo){
-        history('/login')
-     }else{
-        history(`/bus/${id}`)
-     }
-       
-    }
+   
   return (
        
          <Table>
@@ -34,7 +27,7 @@ const Bus = ({bus}) => {
                              <td>{app.day}</td>
                              <td>
                                  <LinkContainer to={userInfo ? `/reservation/${app._id}` : '/login'}>
-                                   <Button variant='danger' className='btn-sm' onClick={bookHandler(bus._id)}>
+                                   <Button variant='danger' className='btn-sm' >
                                        Book
                                    </Button>
                                  </LinkContainer>

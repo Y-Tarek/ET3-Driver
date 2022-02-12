@@ -10,6 +10,8 @@ import SearchResultsScreen from './Screens/SearchResultsScreen';
 import LoginScreen from './Screens/LoginScreen';
 import RegisterScreen from './Screens/RegisterScreen';
 import ReservationScreen from './Screens/ReservationScreen';
+import TicketScreen from './Screens/TicketScreen';
+import ReservationsListScreen from './Screens/ReservationsListScreen';
 
 function App() {
   return (
@@ -19,10 +21,12 @@ function App() {
       <Container>
          <Routes>
            <Route path='/' element={<HomeScreen/>} exact></Route>
+           <Route path='/admin/reservationslist' element={<ReservationsListScreen/>} exact></Route>
+           <Route path='/admin/reservationslist/:number' element={<ReservationsListScreen/>} exact></Route>
            <Route path='/buses' element={<BusesScreen/>} exact></Route>
            <Route path='/login' element={<LoginScreen/>} ></Route>
            <Route path='/register' element={<RegisterScreen/>} exact></Route>
-           <Route path='/search/:firstkeyword' element={<SearchResultsScreen/>} exact></Route>
+           <Route path='/tickets' element={<TicketScreen/>} ></Route>
            <Route path='/search/:firstkeyword/:secondkeyword' element={<SearchResultsScreen/>} exact></Route>
            <Route path='/reservation/:id' element={<ReservationScreen/>} exact></Route>
          </Routes>

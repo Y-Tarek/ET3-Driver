@@ -1,5 +1,6 @@
 const express = require('express');
 const { addBus, getBuses, deleteBus, updateBus, getBus, updateBusAppoitment, deleteBusAppoitment,addBusAppoitment, getBusAppoitment } = require('../controllers/busController');
+const { deletReservation } = require('../controllers/reservationController');
 const {authinticate,isAdmin} = require('../Middleware/authinticate');
 const router = express.Router();
 

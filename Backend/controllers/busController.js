@@ -23,7 +23,7 @@ const getBuses = (async(req,res) => {
         }
     } : {};
     const secondkeyword = req.query.secondkeyword ? {
-        destination:{
+        destination:{ 
             $regex:req.query.secondkeyword,
             $options:'i'
         }
@@ -79,7 +79,8 @@ const getBusAppoitment = (async (req,res) => {
     }else{
         var appoitment = bus.appoitments.id(appoitment_id);
         res.status(200).send({
-            _id:appoitment._id,
+            busId:bus._id,
+            _id:appoitment_id,
             name:bus.name,
             destination:bus.destination,
             ticketPrice:bus.ticketPrice,

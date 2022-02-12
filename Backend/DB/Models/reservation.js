@@ -18,6 +18,10 @@ const reservationSchema = new mongoose.Schema({
      day:{type:String,required:true},
      from:{type:String,required:true},
      time:{type:String,required:true}
+ },
+ number:{
+     type:Number,
+     required:true,
  }
 },{
     timestamps:true

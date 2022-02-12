@@ -24,16 +24,16 @@ export const  busesListReducer = (state = {buses:[]}, action) => {
   }
   
 
-  export const busWithAppoitmentDetailsReducer = (state = {bus:{}}, action) => {
+  export const busWithAppoitmentDetailsReducer = (state = {loading:true,bus:{}}, action) => {
     switch(action.type){
         case BUS_APPOITMENT_DETAIL_REQUEST : 
-         return {loading: true, bus:{}};
+         return {loading: true};
     
         case BUS_APPOITMENT_DETAIL_SUCCESS : 
         return {loading: false, bus: action.payload} ;
           
         case BUS_APPOITMENT_DETAIL_FAIL: 
-        return {loading: false, bus:{}} ; 
+        return {loading: false, error:action.payload} ; 
     
         default:
             return state;

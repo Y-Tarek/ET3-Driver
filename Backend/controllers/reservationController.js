@@ -2,10 +2,11 @@ const {Reservation} = require('../DB/Models/reservation');
 
 const createReservation = (async (req,res) => {
  var user_id = req.user._id;
- const {tripDetails} = req.body;
+ const {tripDetails,number} = req.body;
  const reservation = new Reservation({
      user:user_id,
-     tripDetails:tripDetails
+     tripDetails,
+     number
  });
 
  const newReservation = await reservation.save();
@@ -13,7 +14,11 @@ const createReservation = (async (req,res) => {
 });
 
 const getReservations = (async (req,res) => {
- const data = await Reservation.find({}).populate('user', 'id username');
+    const number = req.query.number ? {
+        number:req.query.number
+    } : {};
+
+ const data = await Reservation.find({...number}).populate('user', 'id username');
  if(!data){
      res.status(404).send()
  }
@@ -28,6 +33,24 @@ const getReservationById = (async (req,res) => {
  }
  res.status(200).send(item);
 });
+
+// const getReservationNumber = (async (req,res) => {
+//     var number = req.params.number;
+//     var item = await Reservation.findOne({number:number});
+//     if(!item){
+//         res.status(404).send();
+//     }
+//     res.status(200).send(item);
+//    });
+
+const getUserReservations = (async (req,res) => {
+    var id = req.user._id;
+    var items = await Reservation.find({user:id});
+    if(!items){
+        res.status(404).send();
+    }
+    res.status(200).send(items);
+   });
 
 
 const getApproavedReservations = (async (req,res) => {
@@ -48,5 +71,14 @@ const updateReservationApproval = (async (req,res) => {
  res.status(200).send("Approaved");
 });
 
+const deletReservation = (async (req,res) => {
+    var id = req.params.id;
+    var deleted = await Reservation.findOneAndDelete({_id:id});
+    if(!deleted){
+        res.status(400).send();
+    }
+    res.status(200).send("deleted");
+   });
 
-module.exports = {createReservation,getReservations,getApproavedReservations,updateReservationApproval,getReservationById}
+
+module.exports = {createReservation,getReservations,getApproavedReservations,updateReservationApproval,getReservationById, getUserReservations, deletReservation}
