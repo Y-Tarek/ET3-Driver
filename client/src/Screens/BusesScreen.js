@@ -13,6 +13,8 @@ const BusesScreen = () => {
     const params = useParams();
     const busesList = useSelector(state => state.busesList);
     const {buses,loading,error} = busesList;
+    const userLogin = useSelector(state => state.userLogin);
+    const  {userInfo} = userLogin;
 
     const appoimentDelete = useSelector(state => state.appoimentDelete);
     const {loading:loadingAppDelete,success,error:errorAppDelete} = appoimentDelete;
@@ -37,9 +39,11 @@ const BusesScreen = () => {
             <Row>
              {buses.map(bus => (
                  <>
-              <LinkContainer to={`/bus/${bus._id}`}>
-              <h3>{bus.name}</h3>
-              </LinkContainer>
+                 {userInfo && userInfo.isAdmin ? 
+                  <LinkContainer to={`/bus/${bus._id}`}>
+                  <h3>{bus.name}</h3>
+                  </LinkContainer> : <h3>{bus.name}</h3>
+                 }
              <h4>{bus.destination}</h4>
              <h5>{bus.ticketPrice} EGP</h5>
              <Bus bus={bus}></Bus>
