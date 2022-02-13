@@ -1,13 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Container,Table,Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
+import { deleteAppoitment } from '../Actions/BusesActions';
 
 const Bus = ({bus}) => {
     const userLogin = useSelector(state => state.userLogin);
     const {userInfo} = userLogin;
     var history = useNavigate()
+    var toArray = bus.destination.split("-") ;
+    var to = toArray[toArray.length -1];
+    const dispatch = useDispatch()
+
+    
+
+    const deleteAppoitmentHandler = (id) => {
+      dispatch(deleteAppoitment(id));
+    }
    
   return (
        
@@ -15,6 +25,7 @@ const Bus = ({bus}) => {
              <thead>
                  <tr>
                      <th>from</th>
+                     <th>TO</th>
                      <th>time</th>
                      <th>day</th>
                  </tr>
@@ -23,6 +34,7 @@ const Bus = ({bus}) => {
                      {bus.appoitments.map(app => (
                          <tr key={app._id}>
                              <td>{app.from}</td>
+                             <td>{to}</td>
                              <td>{app.time}</td>
                              <td>{app.day}</td>
                              {userInfo && !userInfo.isAdmin && (
@@ -34,6 +46,14 @@ const Bus = ({bus}) => {
                                 </LinkContainer>
                             </td>
                              )}
+
+                            {userInfo && userInfo.isAdmin && (
+                                <td>
+                                <Button variant='danger' className='btn-sm' onClick={() => {deleteAppoitmentHandler(app._id)}} >
+                                    DELETE
+                                </Button>
+                                </td>
+                            )}
                              
                          </tr>
                      ))}
