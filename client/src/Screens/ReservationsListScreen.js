@@ -1,6 +1,7 @@
 import React,{useEffect} from 'react';
 import { useSelector,useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Table,Button } from 'react-bootstrap';
 import { listReservations,updateReservationApproval } from '../Actions/ReservationActions';
 import Loader from '../Components/Loader';
@@ -17,6 +18,7 @@ const ReservationsListScreen = () => {
     const {loading:loadingApprove, error:errorApprove, success} =  reservationUpdate;
 
     const dispatch = useDispatch();
+    const history = useNavigate();
     const params = useParams();
     var number = params.number;
     
@@ -25,8 +27,14 @@ const ReservationsListScreen = () => {
         console.log("approve"); 
     }
     useEffect(() => {
-       dispatch(listReservations(number))
+        if(userInfo){
+            dispatch(listReservations(number))
+        }else{
+            history('/')
+        }
+      
     },[dispatch,number,success,userInfo]);
+
     const approveHandler = (id) =>{
         if(window.confirm("Are you sure")){
             dispatch(updateReservationApproval(id))
@@ -66,18 +74,21 @@ const ReservationsListScreen = () => {
                                 <td>{ticket.tripDetails.from}</td>
                                 <td>{ticket.number}</td>
                                 <td>{ticket.isApproaved ?(<p>approaved</p>)  : (<p>pending</p>)}</td>
-                                {!ticket.isApproaved && (
+                                {!ticket.isApproaved ? (
                                      <td>
-                                   <Button variant='primary' className='btn-sm' onClick={() =>{approveHandler(ticket._id)}}>
+                                   <Button variant='primary'  onClick={() =>{approveHandler(ticket._id)}}>
                                        Accept
                                    </Button>
 
-                                   <Button variant='danger' className='btn-sm' onClick={refuseHandler}>
-                                       Decline
-                                   </Button>
                                 </td> 
-                                ) }
-                               
+                                ) : 
+                                <td>
+                                <Button variant='danger' >
+                                  <i className='fas fa-check'></i>
+                                </Button>
+                                </td>
+                                }
+ 
                             </tr>
                           ))}
                           </>

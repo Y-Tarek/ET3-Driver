@@ -28,9 +28,11 @@ const Header = () => {
             <LinkContainer to={'/buses'}>
                 <Nav.Link ><i className="fas fa-bus"></i>Buses</Nav.Link>
                 </LinkContainer>
-                <LinkContainer to={'/tickets'}>
-                <Nav.Link ><i className="fas fa-ticket"></i>Tickets</Nav.Link>
-                </LinkContainer>
+                {userInfo && !userInfo.isAdmin && (
+                      <LinkContainer to={'/tickets'}>
+                      <Nav.Link ><i className="fas fa-ticket"></i>Tickets</Nav.Link>
+                      </LinkContainer>
+                )}
                 {userInfo ? (
                       <NavDropdown title={userInfo.username} id='username'>
                           <LinkContainer to='/profile'>
@@ -45,11 +47,8 @@ const Header = () => {
                     }
                       {userInfo && userInfo.isAdmin && (
                          <NavDropdown title= 'Admin' id='adminmenue'>
-                            <LinkContainer to='/admin/userlist'>
-                                <NavDropdown.Item>Users</NavDropdown.Item> 
-                            </LinkContainer>
-                            <LinkContainer to='/admin/buseslist'>
-                                <NavDropdown.Item>Buses</NavDropdown.Item> 
+                            <LinkContainer to='/admin/createbus'>
+                                <NavDropdown.Item>AddBuses</NavDropdown.Item> 
                             </LinkContainer>
                             <LinkContainer to='/admin/reservationslist'>
                                 <NavDropdown.Item>Reservations</NavDropdown.Item> 

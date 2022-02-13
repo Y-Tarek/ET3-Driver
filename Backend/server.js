@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const bodyParser = require('body-parser');
 const {mongoose} = require('./DB/mongoose');
+const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const busRoutes = require('./routes/busRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
@@ -12,9 +13,17 @@ app.use('/api/user',userRoutes);
 app.use('/api/bus',busRoutes);
 app.use('/api/reservations',reservationRoutes);
 
-app.get('/',(req,res) => {
-    res.status(200).send("Hello")
-})
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname,'..', 'client' ,'build')));
+    app.get('*', (req,res) => {
+        // console.log(path.join(__dirname,'..', 'frontend' ,'build',  'index.html'));
+         res.sendFile(path.resolve(__dirname,'..', 'client' ,'build',  'index.html'))
+
+
+    })
+}else{
+    app.get('/',(req,res) => {res.send('API RUNNING');})
+}
 
 
 

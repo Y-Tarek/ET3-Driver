@@ -25,13 +25,16 @@ const Bus = ({bus}) => {
                              <td>{app.from}</td>
                              <td>{app.time}</td>
                              <td>{app.day}</td>
-                             <td>
-                                 <LinkContainer to={userInfo ? `/reservation/${app._id}` : '/login'}>
-                                   <Button variant='danger' className='btn-sm' >
-                                       Book
-                                   </Button>
-                                 </LinkContainer>
-                             </td>
+                             {userInfo && !userInfo.isAdmin && (
+                                <td>
+                                <LinkContainer to={userInfo ? `/reservation/${app._id}` : '/login'}>
+                                  <Button variant='danger' className='btn-sm' >
+                                      Book
+                                  </Button>
+                                </LinkContainer>
+                            </td>
+                             )}
+                             
                          </tr>
                      ))}
                  </tbody>

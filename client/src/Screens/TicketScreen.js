@@ -1,5 +1,6 @@
 import React,{useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Table, Row, Col} from 'react-bootstrap';
 import  Message  from '../Components/Message';
 import  Loader  from '../Components/Loader';
@@ -13,12 +14,17 @@ const TicketScreen = () => {
     const {tickets,loading,error} = myTicketsDetails;
 
     const dispatch = useDispatch();
+    const history = useNavigate();
 
     useEffect(() => {
+         if(userInfo){
+          dispatch(getUserTickets());
+         }else{
+              history('/')
+         }
+             
          
-             dispatch(getUserTickets());
          
-         console.log(tickets);
     },[dispatch])
 
   return (
