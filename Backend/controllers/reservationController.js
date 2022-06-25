@@ -1,4 +1,6 @@
 const {Reservation} = require('../DB/Models/reservation');
+const socket = require('../server');
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 
 const createReservation = (async (req,res) => {
  var user_id = req.user._id;
@@ -15,7 +17,7 @@ const createReservation = (async (req,res) => {
 
 const getReservations = (async (req,res) => {
     const number = req.query.number ? {
-        number:req.query.number
+        number:req.query.number 
     } : {};
 
  const data = await Reservation.find({...number}).populate('user', 'id username');
@@ -68,8 +70,15 @@ const updateReservationApproval = (async (req,res) => {
  if(!update){
      res.status(400).send();
  }
+ var obj = {
+     _id:id,
+     user_id:update.user._id,
+     bus:update.tripDetails.name,
+     at:update.tripDetails.time
+ }
+ socket.ioObject.sockets.emit('ticketApproaved',obj);
  res.status(200).send("Approaved");
-});
+}); 
 
 const deletReservation = (async (req,res) => {
     var id = req.params.id;
@@ -80,5 +89,28 @@ const deletReservation = (async (req,res) => {
     res.status(200).send("deleted");
    });
 
+const checkoutSession = (async (req,res) => {
+  const {amount,name} = req.body
+    const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: 'egp',
+              product_data: {
+                name: name,
+              },
+              unit_amount: amount * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: 'https://example.com/success',
+        cancel_url: 'https://example.com/cancel',
+      });
+    
+      res.status(200).send({"url":session.url})
+})
 
-module.exports = {createReservation,getReservations,getApproavedReservations,updateReservationApproval,getReservationById, getUserReservations, deletReservation}
+
+module.exports = {createReservation,getReservations,getApproavedReservations,updateReservationApproval,getReservationById, getUserReservations, deletReservation, checkoutSession}

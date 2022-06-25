@@ -1,4 +1,6 @@
 const {User} = require('../DB/Models/users');
+const socket = require('../server');
+
 
 const register = (async (req,res) => {
     const {username,email,password,isAdmin} = req.body;
@@ -11,9 +13,9 @@ const register = (async (req,res) => {
     if(!user){
         res.status(400).send();
     }
-    var token = user.generateAuthToken();
+    var token = user.generateAuthToken(); 
     res.status(201).send({
-        _id:user._id,
+        _id:user._id, 
         username: user.username,
         email:user.email,
         isAdmin:user.isAdmin,
@@ -24,9 +26,10 @@ const register = (async (req,res) => {
 
 
 const login = (async (req,res)  => {
-    const {email,password} = req.body;
+    const {email,password} = req.body; 
     var user = await User.findByEmail(email);
    if(user && await (user.matchPasssword(password))){
+    socket.ioObject.sockets.emit('welcomeback',user); 
     res.status(200).send({
         _id:user._id, 
         username:user.username,

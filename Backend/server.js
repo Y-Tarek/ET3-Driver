@@ -7,6 +7,30 @@ const userRoutes = require('./routes/userRoutes');
 const busRoutes = require('./routes/busRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const socketIO = require('socket.io');
+
+const io = socketIO(server, {
+    transports:['polling'],
+    cors:{
+      cors: {
+        origin: "*"
+      }
+    }
+  });
+io.on('connection', (socket) => {
+    console.log('A user is connected');
+
+
+  socket.on('disconnect', () => {
+    console.log(`socket ${socket.id} disconnected`);
+})
+
+});
+ 
+const socketIoObject = io;
+module.exports.ioObject = socketIoObject;
 
 app.use(bodyParser.json());
 app.use('/api/user',userRoutes);
@@ -20,7 +44,7 @@ if(process.env.NODE_ENV === 'production'){
          res.sendFile(path.resolve(__dirname,'..', 'client' ,'build',  'index.html'))
 
 
-    })
+    }) 
 }else{
     app.get('/',(req,res) => {res.send('API RUNNING');})
 }
@@ -28,7 +52,7 @@ if(process.env.NODE_ENV === 'production'){
 
 
 
-app.listen(process.env.PORT, (e) => {
+server.listen(process.env.PORT, (e) => {
     if(e){
         console.log("An error occured",e);
     }

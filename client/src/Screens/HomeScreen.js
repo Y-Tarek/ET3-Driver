@@ -2,14 +2,20 @@ import React, {useState,useEffect} from 'react';
 import { Row,Col,Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Message from '../Components/Message';
+import io from 'socket.io-client';
 
 
 
 const HomeScreen = () => {
+
+  const userLogin = useSelector(state => state.userLogin);
+  const  {userInfo} = userLogin;
+
   const [from,setFrom] = useState('');
   const [to, setTo] = useState('');
-
+  
   
 
   const dispatch = useDispatch();
@@ -28,8 +34,11 @@ const HomeScreen = () => {
     }
     
   }
+  
+  
   return (
     <Row>
+    
       <h1>Our Mission</h1>
        <h5>You can check our buses destinations routes and times, searcj for your destination and see if our buses can serve you and if you want to book a a ride just sign in or if you dont have an account create one and book your trip. </h5>
        <h6>You want to go from a place to a place just search for that</h6>

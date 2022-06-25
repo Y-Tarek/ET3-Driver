@@ -14,7 +14,10 @@ import {
     RESERVATION_APPROVAL_REQUEST,
     RESERVATION_APPROVAL_SUCCESS,
     RESERVATION_APPROVAL_FAIL,
-    RESERVATION_APPROVAL_RESET
+    RESERVATION_APPROVAL_RESET,
+    PAYMENT_SUCCESS,
+    PAYMENT_REQUEST,
+    PAYMENT_FAIL
 } from '../Constants/ReservationConstants';
 
 export const reservationCreateReducer = (state = {}, action) => {
@@ -112,4 +115,27 @@ export const reservationCreateReducer = (state = {}, action) => {
         return state
     }
   }
+
+export const paymentReservationReducer = (state={url:{}},action) => {
+  switch (action.type) {
+    case PAYMENT_REQUEST:
+      return {
+        loading: true,
+      }
+    case PAYMENT_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        url:action.payload
+      }
+    case PAYMENT_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
 

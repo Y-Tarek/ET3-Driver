@@ -14,13 +14,37 @@ import TicketScreen from './Screens/TicketScreen';
 import ReservationsListScreen from './Screens/ReservationsListScreen';
 import BusCreateScreen from './Screens/BusCreateScreen';
 import BusScreen from './Screens/BusScreen';
+import { useEffect,useState } from 'react';
+import { useSelector } from 'react-redux';
+import io from 'socket.io-client';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer,NotificationManager} from 'react-notifications';
 
 function App() {
-  return (
+  const userLogin = useSelector(state => state.userLogin);
+  const  {userInfo} = userLogin;
+  
+  // const [linkId, setLinkId] = useState(null);
+  // const [userId, setUserId] = useState('');
+
+  useEffect(() =>{
+    
+    const socket = io();
+    socket.on('ticketApproaved',(obj) => {
+      if(userInfo && userInfo._id == obj.user_id){
+        NotificationManager.success(`Your trip by ${obj.bus} is Scheduled at ${obj.at}`, 'ET3 drive');
+      }else if(userInfo && userInfo.isAdmin){
+        NotificationManager.success(`Success`, 'ET3 drive');
+      }
+      
+    })
+  },[])
+  return ( 
   <Router>
    <Header/>
     <main>
       <Container>
+      <NotificationContainer/>
          <Routes>
            <Route path='/' element={<HomeScreen/>} exact></Route>
            <Route path='/admin/reservationslist' element={<ReservationsListScreen/>} exact></Route>

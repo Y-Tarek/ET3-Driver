@@ -78,12 +78,21 @@ const BusScreen = () => {
             </Col>
             <Col>
             <Form.Select aria-label="choose time" onChange={(e) => {setTime(time.concat(e.target.value))}}>
+                                <option>Choose Period</option>
                                 <option value="Am">Am</option>
                                 <option value="Pm">Pm</option>
             </Form.Select>
             </Col>
             <Col>
-            <Form.Control type='text' placeholder="Day" value={day} onChange={(e) => {setDay(e.target.value)}} />
+                <Form.Control as='select' placeholder="Day" value={day} onChange={(e) => {setDay(e.target.value)}}>
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="thursday">Thursday</option>
+                <option value="fridayday">Friday</option>
+                <option value="saturday">Saturday</option>
+            </Form.Control>
             </Col>
             <Button type='submit' variant='primary'>
                 ADD

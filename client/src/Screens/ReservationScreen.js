@@ -6,7 +6,7 @@ import { Table,Row,Button,Form } from 'react-bootstrap';
 import Loader  from '../Components/Loader';
 import Message from '../Components/Message';
 import { LinkContainer } from 'react-router-bootstrap';
- import { createReservation } from '../Actions/ReservationActions';
+ import { createReservation, payReservation } from '../Actions/ReservationActions';
 import { RESERVATION_CREATE_RESET } from '../Constants/ReservationConstants';
 
 
@@ -20,8 +20,10 @@ const ReservationScreen = () => {
     const {bus,loading,error} = busWithAppoitmentDetails;
     const reservationCreate = useSelector(state => state.reservationCreate);
     const {ticket,loading:loadingReservation,error:errorReservation, success:successCreate} = reservationCreate;
+    const paymentCreate = useSelector(state => state.paymentCreate)
+    const {url,loading:loadingPayment,error:errorPayment, success:successPayment} = paymentCreate
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); 
     const params = useParams();
     const history = useNavigate();
     var id = params.id;
@@ -36,8 +38,16 @@ useEffect(() => {
         dispatch(getBusAppoitmentDetails(id)); 
         
     }
+
+    if(successPayment){
+      console.log(url);
+      window.open(url['url'])
+    } 
+    if(errorPayment){
+      console.log(errorPayment.message); 
+    }
    
-},[dispatch,history,id,successCreate]) 
+},[dispatch,history,id,successCreate,successPayment]) 
 
 const createHandler = () => {
  var tripDetails:{};
@@ -56,8 +66,13 @@ const createHandler = () => {
   }));
   
 }
+
+const paymentHandler = () => {
+  var paymentDetails = {"amount":totalPrice,"name":bus.name} 
+  dispatch(payReservation(paymentDetails))
+}
   return ( 
-    <>  
+    <>   
     {/* <div>{bus.name}</div>    */}
      {loading ? <Loader/> : error ? <Message variant='danger'>{error}</Message> : (
         <Row>
@@ -93,7 +108,11 @@ const createHandler = () => {
              </Table>
              
                 <Button variant='danger' className='btn-sm' onClick={createHandler}>
-                    Confirm
+                    Confirm To Pay in Cache
+                </Button>
+               
+                <Button variant='danger' className='btn-sm'  onClick={paymentHandler}>
+                    Pay with your Credit
                 </Button>
              
         </Row>
