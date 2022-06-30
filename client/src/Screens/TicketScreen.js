@@ -1,10 +1,10 @@
 import React,{useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Table, Row, Col} from 'react-bootstrap';
+import { Table, Row, Col, Button} from 'react-bootstrap';
 import  Message  from '../Components/Message';
 import  Loader  from '../Components/Loader';
-import { getUserTickets } from '../Actions/ReservationActions';
+import { getUserTickets, payReservation } from '../Actions/ReservationActions';
 
 const TicketScreen = () => {
     const userLogin = useSelector(state => state.userLogin);
@@ -12,6 +12,10 @@ const TicketScreen = () => {
 
     const myTicketsDetails = useSelector(state => state.myTicketsDetails)
     const {tickets,loading,error} = myTicketsDetails;
+
+    const paymentCreate = useSelector(state => state.paymentCreate)
+    const {url,loading:loadingPayment,error:errorPayment, success:successPayment} = paymentCreate
+
 
     const dispatch = useDispatch();
     const history = useNavigate();
@@ -23,9 +27,21 @@ const TicketScreen = () => {
               history('/')
          }
              
+         if(successPayment){
+          console.log(url);
+          window.open(url['url'])
+        } 
+        if(errorPayment){
+          console.log(errorPayment.message); 
+        }
          
-         
-    },[dispatch])
+    },[dispatch,successPayment])
+
+    const paymentHandler = (totalPrice,name) => {
+      var paymentDetails = {"amount":totalPrice,"name":name}    
+       dispatch(payReservation(paymentDetails))
+      // console.log(paymentDetails);
+    }
 
   return (
       <>
@@ -42,6 +58,7 @@ const TicketScreen = () => {
                          <th>FROM</th>
                          <th>NUMBER</th>
                          <th>STATUS</th>
+                         <th>Payment Status</th>
                      </tr>
                  </thead>
                  <tbody>
@@ -56,11 +73,12 @@ const TicketScreen = () => {
                                 <td>{ticket.tripDetails.from}</td>
                                 <td>{ticket.number}</td>
                                 <td>{ticket.isApproaved ?(<p>approaved</p>)  : (<p>pending</p>)}</td>
+                                <td><Button variant='danger' onClick={() => {paymentHandler(ticket.tripDetails.price,ticket.tripDetails.name)}} >Pay Online</Button></td>
                             </tr>
                           ))}
                           </>
                      )}
-                    
+                     
                  </tbody>
           </Table>
         </>

@@ -20,8 +20,7 @@ const ReservationScreen = () => {
     const {bus,loading,error} = busWithAppoitmentDetails;
     const reservationCreate = useSelector(state => state.reservationCreate);
     const {ticket,loading:loadingReservation,error:errorReservation, success:successCreate} = reservationCreate;
-    const paymentCreate = useSelector(state => state.paymentCreate)
-    const {url,loading:loadingPayment,error:errorPayment, success:successPayment} = paymentCreate
+  
 
     const dispatch = useDispatch(); 
     const params = useParams();
@@ -31,7 +30,7 @@ const ReservationScreen = () => {
 useEffect(() => {
   if(successCreate){
     history('/tickets');
-    dispatch({type:RESERVATION_CREATE_RESET})
+    dispatch({type:RESERVATION_CREATE_RESET}) 
   }
     // dispatch(getBusAppoitmentDetails(id));
     if( bus._id !== id){
@@ -39,15 +38,9 @@ useEffect(() => {
         
     }
 
-    if(successPayment){
-      console.log(url);
-      window.open(url['url'])
-    } 
-    if(errorPayment){
-      console.log(errorPayment.message); 
-    }
+ 
    
-},[dispatch,history,id,successCreate,successPayment]) 
+},[dispatch,history,id,successCreate]) 
 
 const createHandler = () => {
  var tripDetails:{};
@@ -67,10 +60,7 @@ const createHandler = () => {
   
 }
 
-const paymentHandler = () => {
-  var paymentDetails = {"amount":totalPrice,"name":bus.name} 
-  dispatch(payReservation(paymentDetails))
-}
+
   return ( 
     <>   
     {/* <div>{bus.name}</div>    */}
@@ -108,12 +98,10 @@ const paymentHandler = () => {
              </Table>
              
                 <Button variant='danger' className='btn-sm' onClick={createHandler}>
-                    Confirm To Pay in Cache
+                    Confirm 
                 </Button>
                
-                <Button variant='danger' className='btn-sm'  onClick={paymentHandler}>
-                    Pay with your Credit
-                </Button>
+                
              
         </Row>
       )}
